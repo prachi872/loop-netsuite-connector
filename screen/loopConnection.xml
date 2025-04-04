@@ -24,14 +24,14 @@
       <form-single name="CreateUserLoopAccount" transition="createLoopConnection">
 
         <!-- Form fields -->
-        <field name="accessKey">
+        <field name="privateKey">
           <default-field title="Access Key">
             <text-line size="30"/>
           </default-field>
         </field>
 
         <!-- Webhook Secret  -->
-        <field name="sharedSecret">
+        <field name="sendSharedSecret">
           <default-field title="Webhook Secret">
             <password size="50"/>
           </default-field>

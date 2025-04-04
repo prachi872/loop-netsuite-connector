@@ -6,13 +6,14 @@
       Creates a new SystemMessage entry and associates it with the currently logged-in user.
     </description>
     <in-parameters>
-      <parameter name="accessKey" required="true"/>
-      <parameter name="sharedSecret" required="true"/>
+      <parameter name="privateKey" required="true"/>
+      <parameter name="sendSharedSecret" required="true"/>
     </in-parameters>
     <out-parameters>
       <parameter name="systemMessageRemoteId"/>
     </out-parameters>
     <actions>
+
       <!-- Step 1: Get the currently logged-in userId -->
       <set field="userId" from="ec.user.userId"/>
       <if condition="userId == null">
@@ -36,15 +37,18 @@
       </if>
 
       <!-- Step 2: Create SystemMessageRemote entry -->
+      <set field="systemMessageTypeId" from="'LoopReturnsCreate'"/>
       <service-call name="create#SystemMessageRemote"
-                    in-map="[accessKey:accessKey,
-                             sharedSecret:sharedSecret]"
+                    in-map="[privateKey:privateKey,
+                             sendSharedSecret:sendSharedSecret,
+                             systemMessageTypeId:systemMessageTypeId]"
                     out-map="systemMessageOut"/>
       <set field="systemMessageRemoteId" from="systemMessageOut.systemMessageRemoteId"/>
 
       <if condition="systemMessageRemoteId == null">
         <return error="true" message="Failed to create SystemMessageRemote. No valid ID returned."/>
       </if>
+
       <!-- Step 3: Check for existing entry in PartySystemMessageRemote -->
       <entity-find entity-name="PartySystemMessageRemote" list="existingRecords">
         <econdition field-name="partyId" value="${partyId}"/>
@@ -56,7 +60,7 @@
       </if>
 
       <!-- Step 4: Associate SystemMessageRemote with PartySystemMessageRemote -->
-      <set field="assocTypeId" from="'LOOP_CREDENTIALS'"/>
+      <set field="assocTypeId" from="'LoopReturnsCreate'"/>
       <set field="fromDate" from="ec.user.nowTimestamp"/>
       <service-call name="create#PartySystemMessageRemote"
                     in-map="[
@@ -65,6 +69,24 @@
                       fromDate:fromDate,
                       assocTypeId:assocTypeId
                     ]"/>
+
+      <!-- Step 5: Create Entry SystemMessageTypeParameter with SystemMessageRemote -->
+<!--      <entity-find entity-name="SystemMessageType" list="systemMessageTypeList">-->
+<!--        <econdition field-name="parentTypeId" value="${systemMessageTypeId}"/>-->
+<!--      </entity-find>-->
+
+      <!-- Step 6: Loop through retrieved systemMessageType records and insert entries in SystemMessageTypeParameter -->
+<!--      <iterate list="systemMessageTypeList" entry="systemMessageType">-->
+
+<!--        <service-call name="create#SystemMessageTypeParameter"-->
+<!--                      in-map="[-->
+<!--                      systemMessageTypeId:systemMessageTypeId,-->
+<!--                      systemMessageRemoteId:systemMessageOut.systemMessageRemoteId-->
+<!--                    ]"/>-->
+<!--          <set field="systemMessageTypeId" from="systemMessageType.systemMessageTypeId"/>-->
+<!--          <set field="systemMessageRemoteId" from="systemMessageOut.systemMessageRemoteId"/>-->
+
+<!--      </iterate>-->
 
       <!-- Final Success Message -->
       <set field="statusMessage" from="'LOOP Account successfully created and linked to the logged-in user.'"/>

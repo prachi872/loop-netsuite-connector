@@ -39,12 +39,14 @@
       </if>
 
       <!-- Create SystemMessageRemote entry -->
+      <set field="systemMessageTypeId" from="'LoopSFTP'"/>
       <service-call name="create#SystemMessageRemote"
                     in-map="[
                               username:username,
-                              description:'User account created for ' + organizationName,
+                              description:'SFTP server connection details',
                               sendUrl:sftpUrl,
-                              password:password]"
+                              password:password,
+                              systemMessageTypeId:systemMessageTypeId]"
                     out-map="messageOut"/>
 
       <set field="systemMessageRemoteId" from="messageOut.systemMessageRemoteId"/>
@@ -52,7 +54,7 @@
         <return error="true" message="Failed to create SystemMessageRemote. No valid ID returned."/>
       </if>
       <!-- Step 3: Associate SystemMessageRemote with PartySystemMessageRemote -->
-      <set field="assocTypeId" from="'SFTP_CREDENTIALS'"/>
+      <set field="assocTypeId" from="'LoopSFTP'"/>
       <set field="fromDate" from="ec.user.nowTimestamp"/>
       <service-call name="create#PartySystemMessageRemote"
                     in-map="[
