@@ -30,8 +30,8 @@
       <if condition="systemMessageRemoteId == null">
         <return error="true" message="Failed to create SystemMessageRemote. No valid ID returned."/>
       </if>
-      <!-- Step 2: Find the partyId of the currently logged-in user -->
-      <!-- Step 1: Get the currently logged-in userId -->
+      <!--Find the partyId of the currently logged-in user -->
+      <!--Get the currently logged-in userId -->
       <set field="userId" from="ec.user.userId"/>
       <if condition="userId == null">
         <return error="true" message="No logged-in user found."/>

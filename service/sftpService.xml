@@ -16,7 +16,7 @@
     </out-parameters>
     <actions>
       <set field="createdTimestamp" from="ec.user.nowTimestamp"/>
-      <!-- Step 1: Get the currently logged-in userId -->
+      <!-- Get the currently logged-in userId -->
       <set field="userId" from="ec.user.userId"/>
       <if condition="userId == null">
         <return error="true" message="No logged-in user found."/>
@@ -53,7 +53,7 @@
       <if condition="systemMessageRemoteId == null">
         <return error="true" message="Failed to create SystemMessageRemote. No valid ID returned."/>
       </if>
-      <!-- Step 3: Associate SystemMessageRemote with PartySystemMessageRemote -->
+      <!-- Associate SystemMessageRemote with PartySystemMessageRemote -->
       <set field="assocTypeId" from="'LoopSFTP'"/>
       <set field="fromDate" from="ec.user.nowTimestamp"/>
       <service-call name="create#PartySystemMessageRemote"

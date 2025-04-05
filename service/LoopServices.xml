@@ -14,7 +14,7 @@
     </out-parameters>
     <actions>
 
-      <!-- Step 1: Get the currently logged-in userId -->
+      <!-- Get the currently logged-in userId -->
       <set field="userId" from="ec.user.userId"/>
       <if condition="userId == null">
         <return error="true" message="No logged-in user found."/>
@@ -36,20 +36,19 @@
         <return error="true" message="No Party ID associated with the logged-in user (userId: ${userId})."/>
       </if>
 
-      <!-- Step 2: Create SystemMessageRemote entry -->
-      <set field="systemMessageTypeId" from="'LoopReturnsCreate'"/>
+      <!-- Create SystemMessageRemote entry -->
+      <set field="systemMessageTypeId" from="'LoopWebhook'"/>
       <service-call name="create#SystemMessageRemote"
                     in-map="[privateKey:privateKey,
                              sendSharedSecret:sendSharedSecret,
                              systemMessageTypeId:systemMessageTypeId]"
                     out-map="systemMessageOut"/>
       <set field="systemMessageRemoteId" from="systemMessageOut.systemMessageRemoteId"/>
-
       <if condition="systemMessageRemoteId == null">
         <return error="true" message="Failed to create SystemMessageRemote. No valid ID returned."/>
       </if>
 
-      <!-- Step 3: Check for existing entry in PartySystemMessageRemote -->
+      <!-- Check for existing entry in PartySystemMessageRemote -->
       <entity-find entity-name="PartySystemMessageRemote" list="existingRecords">
         <econdition field-name="partyId" value="${partyId}"/>
         <econdition field-name="systemMessageRemoteId" value="${systemMessageRemoteId}"/>
@@ -59,7 +58,7 @@
         <return error="true" message="Entry already exists for partyId: ${partyId} and systemMessageRemoteId: ${systemMessageRemoteId}."/>
       </if>
 
-      <!-- Step 4: Associate SystemMessageRemote with PartySystemMessageRemote -->
+      <!-- Associate SystemMessageRemote with PartySystemMessageRemote -->
       <set field="assocTypeId" from="'LoopReturnsCreate'"/>
       <set field="fromDate" from="ec.user.nowTimestamp"/>
       <service-call name="create#PartySystemMessageRemote"
@@ -70,7 +69,7 @@
                       assocTypeId:assocTypeId
                     ]"/>
 
-      <!-- Step 5: Create Entry SystemMessageTypeParameter with SystemMessageRemote -->
+       Step 5: Create Entry SystemMessageTypeParameter with SystemMessageRemote
 <!--      <entity-find entity-name="SystemMessageType" list="systemMessageTypeList">-->
 <!--        <econdition field-name="parentTypeId" value="${systemMessageTypeId}"/>-->
 <!--      </entity-find>-->
@@ -89,6 +88,37 @@
 <!--      </iterate>-->
 
       <!-- Final Success Message -->
+      <entity-find entity-name="SystemMessageRemote" list="remoteList">
+        <econdition field-name="systemMessageTypeId" value="LoopWebhook"/>
+        <order-by field-name="systemMessageRemoteId"/>
+      </entity-find>
+
+      <!-- Get first remoteId -->
+      <if condition="remoteList">
+        <set from="remoteList[0].systemMessageRemoteId" field="loopRemoteId"/>
+      </if>
+
+      <!-- 2. Get all SystemMessageType where parentTypeId = 'LoopWebhook' -->
+      <entity-find entity-name="SystemMessageType" list="typeList">
+        <econdition field-name="parentTypeId" value="LoopWebhook"/>
+      </entity-find>
+
+      <!-- 3. Loop over each systemMessageTypeId and update SystemMessageTypeParameter -->
+      <iterate list="typeList" entry="typeEntry">
+        <set from="typeEntry.systemMessageTypeId" field="currentTypeId"/>
+
+        <!-- Check if parameter exists -->
+        <entity-find entity-name="SystemMessageTypeParameter" list="paramList">
+          <econdition field-name="systemMessageTypeId" from="currentTypeId"/>
+        </entity-find>
+
+        <if condition="paramList">
+          <iterate list="paramList" entry="paramEntry">
+            <set from="loopRemoteId" field="paramEntry.systemMessageRemoteId"/>
+            <entity-update value-field="paramEntry"/>
+          </iterate>
+        </if>
+      </iterate>
       <set field="statusMessage" from="'LOOP Account successfully created and linked to the logged-in user.'"/>
     </actions>
   </service>
