@@ -43,8 +43,6 @@ along with this software (see the LICENSE.md file). If not, see
 
     <relationship type="one-nofk" related="netsuite.party.Organization" short-alias="organization" mutable="true"/>
     <relationship type="one-nofk" related="netsuite.party.Person" short-alias="person" mutable="true"/>
-    <relationship type="many" related="netsuite.party.PartyIdentification" short-alias="identifications">
-      <key-map field-name="partyId"/></relationship>
     <relationship type="many" related="netsuite.party.PartyRole" short-alias="roles">
       <key-map field-name="partyId"/></relationship>
     <relationship type="many" title="From" related="netsuite.party.PartyRelationship" short-alias="fromRelationships">
