@@ -1,4 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
+<!--
+Loop Access Key     => SystemMessageRemote.privateKey
+Loop Webhook Secret => SystemMessageRemote.sendSharedSecret
+-->
+
 <!-- Updated screen definition for creating a Loop user account -->
 <screen
     xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
@@ -14,7 +19,7 @@
 
   <!-- Transition to create a new user account using the updated service -->
   <transition name="createLoopConnection">
-    <service-call name="LoopServices.create#LoopSystemMessageRemote" in-map="context"/>
+    <service-call name="loopService.create#LoopSystemMessageRemote" in-map="context"/>
     <default-response url="."/>
   </transition>
 

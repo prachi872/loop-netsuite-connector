@@ -17,9 +17,7 @@ along with this software (see the LICENSE.md file). If not, see
   <!-- ========================================================= -->
   <!--  - netsuite.party -->
   <!--  - netsuite.party.contact -->
-  <!--  - netsuite.party.time -->
   <!-- ========================================================= -->
-
 
 
   <!-- ========================================================= -->
@@ -45,8 +43,6 @@ along with this software (see the LICENSE.md file). If not, see
 
     <relationship type="one-nofk" related="netsuite.party.Organization" short-alias="organization" mutable="true"/>
     <relationship type="one-nofk" related="netsuite.party.Person" short-alias="person" mutable="true"/>
-<!--    <relationship type="many" related="netsuite.party.PartyBadge" short-alias="badges">-->
-<!--      <key-map field-name="partyId"/></relationship>-->
     <relationship type="many" related="netsuite.party.PartyClassificationAppl" short-alias="classifications">
       <key-map field-name="partyId"/></relationship>
     <relationship type="many" related="netsuite.party.PartyIdentification" short-alias="identifications">
@@ -83,7 +79,7 @@ along with this software (see the LICENSE.md file). If not, see
         <detail relationship="classification"><detail relationship="type"/></detail>
       </detail>
       <detail relationship="identifications"><detail relationship="type"/></detail>
-      <detail relationship="notes"/>
+<!--      <detail relationship="notes"/>-->
       <detail relationship="roles"><detail relationship="role"/></detail>
       <detail relationship="fromRelationships">
         <detail relationship="fromRole"/>
@@ -172,9 +168,7 @@ along with this software (see the LICENSE.md file). If not, see
       <moqui.basic.Enumeration description="Full-time Employed" enumId="EmpsFullTime" enumTypeId="EmploymentStatus"/>
       <moqui.basic.Enumeration description="Part-time Employed" enumId="EmpsPartTime" enumTypeId="EmploymentStatus"/>
       <moqui.basic.Enumeration description="Self Employed" enumId="EmpsSelf" enumTypeId="EmploymentStatus"/>
-      <moqui.basic.Enumeration description="House-Person" enumId="EmpsHouse" enumTypeId="EmploymentStatus"/>
       <moqui.basic.Enumeration description="Retired" enumId="EmpsRetired" enumTypeId="EmploymentStatus"/>
-      <moqui.basic.Enumeration description="Student" enumId="EmpsStudent" enumTypeId="EmploymentStatus"/>
       <moqui.basic.Enumeration description="Unemployed" enumId="EmpsUnemployed" enumTypeId="EmploymentStatus"/>
 
       <moqui.basic.EnumerationType description="Residence Status" enumTypeId="ResidenceStatus"/>
@@ -218,15 +212,6 @@ along with this software (see the LICENSE.md file). If not, see
     <field name="thruDate" type="date-time"/>
     <relationship type="one" related="netsuite.party.Party" short-alias="party"/>
     <relationship type="one" related="netsuite.party.PartyClassification" short-alias="classification"/>
-  </entity>
-
-  <entity entity-name="PartyGeoPoint" package="netsuite.party">
-    <field name="partyId" type="id" is-pk="true"/>
-    <field name="geoPointId" type="id" is-pk="true"/>
-    <field name="fromDate" type="date-time" is-pk="true"/>
-    <field name="thruDate" type="date-time"/>
-    <relationship type="one" related="netsuite.party.Party"/>
-    <relationship type="one" related="moqui.basic.GeoPoint"/>
   </entity>
   <entity entity-name="PartyIdentification" package="netsuite.party">
     <!-- FUTURE? support multiple/history of IDs; single sequenced PK; update lookup/etc services -->
@@ -338,12 +323,7 @@ along with this software (see the LICENSE.md file). If not, see
       <netsuite.party.RoleType description="Executive" roleTypeId="Executive"/>
       <netsuite.party.RoleType description="Manager" roleTypeId="Manager"/>
       <netsuite.party.RoleType description="Operator" roleTypeId="Operator"/>
-      <netsuite.party.RoleType description="Production Manager" roleTypeId="ProductionManager"/>
-      <netsuite.party.RoleType description="Production Worker" roleTypeId="ProductionWorker"/>
-      <netsuite.party.RoleType description="Receiver" roleTypeId="Receiver"/>
       <netsuite.party.RoleType description="Sales Contact" roleTypeId="Contact"/>
-      <netsuite.party.RoleType description="Shipment Clerk" roleTypeId="ShipmentClerk"/>
-      <netsuite.party.RoleType description="Supplier Agent" roleTypeId="SupplierAgent"/>
       <netsuite.party.RoleType description="Technical Contact" roleTypeId="TechContact"/>
 
 
@@ -358,19 +338,15 @@ along with this software (see the LICENSE.md file). If not, see
       <netsuite.party.RoleType description="Employer" roleTypeId="OrgEmployer"/>
       <netsuite.party.RoleType description="Internal Organization" roleTypeId="OrgInternal"/>
       <netsuite.party.RoleType description="Team" roleTypeId="OrgTeam"/>
-      <netsuite.party.RoleType description="Unit" roleTypeId="OrgUnit"/>
       <netsuite.party.RoleType description="Parent" roleTypeId="OrgParent"/>
-      <netsuite.party.RoleType description="Regulatory Agency" roleTypeId="OrgRegulatoryAgency"/>
       <netsuite.party.RoleType description="Subsidiary" roleTypeId="OrgSubsidiary"/>
       <netsuite.party.RoleType description="Tax Authority" roleTypeId="OrgTaxAuthority"/>
-      <netsuite.party.RoleType description="Union" roleTypeId="OrgUnion"/>
 
       <moqui.basic.Enumeration description="Organization Roles" enumId="RgpOrganization" enumTypeId="RoleGroup"/>
       <netsuite.party.RoleGroupMember roleGroupEnumId="RgpOrganization" roleTypeId="OrgAssociation"/>
       <netsuite.party.RoleGroupMember roleGroupEnumId="RgpOrganization" roleTypeId="OrgCorporation"/>
       <netsuite.party.RoleGroupMember roleGroupEnumId="RgpOrganization" roleTypeId="OrgDepartment"/>
       <netsuite.party.RoleGroupMember roleGroupEnumId="RgpOrganization" roleTypeId="OrgDivision"/>
-      <netsuite.party.RoleGroupMember roleGroupEnumId="RgpOrganization" roleTypeId="OrgFamily"/>
 
       <!-- Customer and Vendor Roles -->
       <!-- NOTE: these don't use RoleGroupMember because they are an actual hierarchy of roles (Customer and Vendor are valid roles with sub-roles) -->
@@ -397,9 +373,10 @@ along with this software (see the LICENSE.md file). If not, see
     <relationship type="one" related="netsuite.party.Party" short-alias="party"/>
   </entity>
 
-  <extend-entity entity-name="SystemMessageRemote" package="moqui.service.message">
-    <field name="accessKey" type="id"/>
-  </extend-entity>
+<!--  <extend-entity entity-name="SystemMessageRemote" package="moqui.service.message">-->
+<!--    <field name="accessKey" type="id"/>-->
+<!--  </extend-entity>-->
+
   <!-- ========================================================= -->
   <!-- netsuite.party.contact -->
   <!-- ========================================================= -->

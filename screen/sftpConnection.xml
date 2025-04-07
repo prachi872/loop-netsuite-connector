@@ -1,4 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
+
+<!--
+NetSuite username          => SystemMessageRemote.username
+NetSuite Organization Name => SystemMessageRemote.organizationName
+NetSuite sftpUrl           => SystemMessageRemote.sftpUrl
+NetSuite Password          => SystemMessageRemote.password
+-->
+
 <!-- Screen definition for creating a user account -->
 <screen
     xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"

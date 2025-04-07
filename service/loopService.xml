@@ -35,7 +35,6 @@
       <if condition="partyId == null">
         <return error="true" message="No Party ID associated with the logged-in user (userId: ${userId})."/>
       </if>
-
       <!-- Create SystemMessageRemote entry -->
       <set field="systemMessageTypeId" from="'LoopWebhook'"/>
       <service-call name="create#SystemMessageRemote"
@@ -47,7 +46,6 @@
       <if condition="systemMessageRemoteId == null">
         <return error="true" message="Failed to create SystemMessageRemote. No valid ID returned."/>
       </if>
-
       <!-- Check for existing entry in PartySystemMessageRemote -->
       <entity-find entity-name="PartySystemMessageRemote" list="existingRecords">
         <econdition field-name="partyId" value="${partyId}"/>
@@ -68,57 +66,6 @@
                       fromDate:fromDate,
                       assocTypeId:assocTypeId
                     ]"/>
-
-       Step 5: Create Entry SystemMessageTypeParameter with SystemMessageRemote
-<!--      <entity-find entity-name="SystemMessageType" list="systemMessageTypeList">-->
-<!--        <econdition field-name="parentTypeId" value="${systemMessageTypeId}"/>-->
-<!--      </entity-find>-->
-
-      <!-- Step 6: Loop through retrieved systemMessageType records and insert entries in SystemMessageTypeParameter -->
-<!--      <iterate list="systemMessageTypeList" entry="systemMessageType">-->
-
-<!--        <service-call name="create#SystemMessageTypeParameter"-->
-<!--                      in-map="[-->
-<!--                      systemMessageTypeId:systemMessageTypeId,-->
-<!--                      systemMessageRemoteId:systemMessageOut.systemMessageRemoteId-->
-<!--                    ]"/>-->
-<!--          <set field="systemMessageTypeId" from="systemMessageType.systemMessageTypeId"/>-->
-<!--          <set field="systemMessageRemoteId" from="systemMessageOut.systemMessageRemoteId"/>-->
-
-<!--      </iterate>-->
-
-      <!-- Final Success Message -->
-      <entity-find entity-name="SystemMessageRemote" list="remoteList">
-        <econdition field-name="systemMessageTypeId" value="LoopWebhook"/>
-        <order-by field-name="systemMessageRemoteId"/>
-      </entity-find>
-
-      <!-- Get first remoteId -->
-      <if condition="remoteList">
-        <set from="remoteList[0].systemMessageRemoteId" field="loopRemoteId"/>
-      </if>
-
-      <!-- 2. Get all SystemMessageType where parentTypeId = 'LoopWebhook' -->
-      <entity-find entity-name="SystemMessageType" list="typeList">
-        <econdition field-name="parentTypeId" value="LoopWebhook"/>
-      </entity-find>
-
-      <!-- 3. Loop over each systemMessageTypeId and update SystemMessageTypeParameter -->
-      <iterate list="typeList" entry="typeEntry">
-        <set from="typeEntry.systemMessageTypeId" field="currentTypeId"/>
-
-        <!-- Check if parameter exists -->
-        <entity-find entity-name="SystemMessageTypeParameter" list="paramList">
-          <econdition field-name="systemMessageTypeId" from="currentTypeId"/>
-        </entity-find>
-
-        <if condition="paramList">
-          <iterate list="paramList" entry="paramEntry">
-            <set from="loopRemoteId" field="paramEntry.systemMessageRemoteId"/>
-            <entity-update value-field="paramEntry"/>
-          </iterate>
-        </if>
-      </iterate>
       <set field="statusMessage" from="'LOOP Account successfully created and linked to the logged-in user.'"/>
     </actions>
   </service>

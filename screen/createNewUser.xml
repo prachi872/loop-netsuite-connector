@@ -1,4 +1,16 @@
 <?xml version="1.0" encoding="UTF-8"?>
+
+<!--
+User Username          => userAccount.username
+User Fullname          => userAccount.userFullName
+User Organization Name => userAccount.organizationName
+User Email             => userAccount.emailAddress
+User Contact Number    => userAccount.contactNumber
+User Password          => userAccount.newPassword
+User Password Verify   => userAccount.newPasswordVerify
+User Password Change   => userAccount.requirePasswordChange
+-->
+
 <!-- Screen definition for creating a user account -->
 <screen
 xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
@@ -12,7 +24,7 @@ require-authentication="anonymous-all">
 </transition>
   <!-- Transition to create a new user account -->
 <transition name="createUserAccount">
-  <service-call name="PartyServices.create#UserWithOrganization" in-map="context"/>
+  <service-call name="createUserAccount.create#UserWithOrganization" in-map="context"/>
   <default-response url="."/>
 </transition>
   <!-- Dialog container for creating a user account -->
