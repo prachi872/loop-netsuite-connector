@@ -215,7 +215,6 @@ along with this software (see the LICENSE.md file). If not, see
       <netsuite.party.RoleType description="Employee" roleTypeId="Employee"/>
       <netsuite.party.RoleType description="Sales Contact" roleTypeId="Contact"/>
       <moqui.basic.Enumeration description="Person Roles" enumId="RgpPerson" enumTypeId="RoleGroup"/>
-      <netsuite.party.RoleGroupMember roleGroupEnumId="RgpPerson" roleTypeId="Accountant"/>
       <netsuite.party.RoleType description="Customer" roleTypeId="Customer"/>
     </seed-data>
   </entity>
@@ -237,16 +236,11 @@ along with this software (see the LICENSE.md file). If not, see
     <field name="contactMechTypeEnumId" type="id"/>
     <field name="dataSourceId" type="id"/>
     <field name="infoString" type="text-medium"/>
-    <field name="gatewayCimId" type="text-short" enable-audit-log="update"/>
     <field name="validateMessage" type="text-medium"/>
-    <field name="paymentFraudEvidenceId" type="id"><description>Refer to evidence here if trustLevelEnumId is gray listed or black listed</description></field>
-    <field name="replacesContactMechId" type="id"><description>For update by copy-on-write this is the ID of the ContactMech it replaces</description></field>
     <relationship type="one" title="ContactMechType" related="moqui.basic.Enumeration" short-alias="type">
       <key-map field-name="contactMechTypeEnumId"/></relationship>
     <relationship type="one" related="moqui.basic.DataSource"/>
-    <relationship type="one-nofk" title="Replaces" related="netsuite.party.contact.ContactMech" short-alias="replacesContactMech">
-      <key-map field-name="replacesContactMechId"/></relationship>
-    <relationship type="one-nofk" related="netsuite.party.contact.TelecomNumber" short-alias="tele\comNumber" mutable="true"/>
+    <relationship type="one-nofk" related="netsuite.party.contact.TelecomNumber" short-alias="telecomNumber" mutable="true"/>
     <relationship type="one-nofk" related="netsuite.party.contact.PostalAddress" short-alias="postalAddress" mutable="true"/>
     <relationship type="many" related="netsuite.party.contact.PartyContactMech" short-alias="parties">
       <key-map field-name="contactMechId"/></relationship>
@@ -314,7 +308,6 @@ along with this software (see the LICENSE.md file). If not, see
     <field name="directions" type="text-long"/>
     <field name="city" type="text-medium"/>
     <field name="cityGeoId" type="id"/>
-    <field name="schoolDistrictGeoId" type="id"/>
     <field name="countyGeoId" type="id"/>
     <field name="stateProvinceGeoId" type="id"/>
     <field name="countryGeoId" type="id"/>
@@ -326,12 +319,9 @@ along with this software (see the LICENSE.md file). If not, see
     <field name="accessCode" type="text-short"/>
     <field name="telecomContactMechId" type="id"/>
     <field name="emailContactMechId" type="id"/>
-    <field name="shipGatewayAddressId" type="text-medium"/>
     <relationship type="one" related="netsuite.party.contact.ContactMech"/>
     <relationship type="one" title="City" related="moqui.basic.Geo" short-alias="cityGeo">
       <key-map field-name="cityGeoId"/></relationship>
-    <relationship type="one" title="SchoolDistrict" related="moqui.basic.Geo">
-      <key-map field-name="schoolDistrictGeoId"/></relationship>
     <relationship type="one" title="County" related="moqui.basic.Geo" short-alias="countyGeo">
       <key-map field-name="countyGeoId"/></relationship>
     <relationship type="one" title="StateProvince" related="moqui.basic.Geo" short-alias="stateProvinceGeo">
