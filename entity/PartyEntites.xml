@@ -214,6 +214,7 @@ along with this software (see the LICENSE.md file). If not, see
       <netsuite.party.RoleType description="Sales Contact" roleTypeId="Contact"/>
       <moqui.basic.Enumeration description="Person Roles" enumId="RgpPerson" enumTypeId="RoleGroup"/>
       <netsuite.party.RoleType description="Customer" roleTypeId="Customer"/>
+      <netsuite.party.RoleType description="Organization" roleTypeId="Organization"/>
     </seed-data>
   </entity>
 
