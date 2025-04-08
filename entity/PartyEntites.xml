@@ -302,7 +302,7 @@ along with this software (see the LICENSE.md file). If not, see
     <relationship type="one-nofk" related="co.hotwax.netsuite.party.contact.PostalAddress"/>
     <relationship type="one-nofk" related="co.hotwax.netsuite.party.contact.TelecomNumber"/>
   </entity>
-  <entity entity-name="PostalAddress" package="co.hotwax.netsuite.party.contact" use="nontransactional" cache="never">
+  <entity entity-name="PostalAddress" package="co.hotwax.netsuite.party.contact">
     <field name="contactMechId" type="id" is-pk="true"/>
     <field name="toName" type="text-medium"/>
     <field name="attnName" type="text-medium"/>
@@ -344,7 +344,7 @@ along with this software (see the LICENSE.md file). If not, see
     <index name="CITY_IDX"><index-field name="city"/></index>
     <index name="POSTAL_CODE_IDX"><index-field name="postalCode"/></index>
   </entity>
-  <entity entity-name="TelecomNumber" package="co.hotwax.netsuite.party.contact" use="nontransactional" cache="never">
+  <entity entity-name="TelecomNumber" package="co.hotwax.netsuite.party.contact">
     <field name="contactMechId" type="id" is-pk="true"/>
     <field name="countryCode" type="text-short"/>
     <field name="areaCode" type="text-short"/>
